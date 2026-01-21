@@ -57,55 +57,74 @@ const HPEEOSManager = () => {
         currentData = SAMPLE_DATA;
       }
 
-      // 2. Ensuite, essayer d'enrichir avec le fichier JSON (si dispo)
+      // 2. Fusion "CLOUD FIRST" : Récupération des données automatisées (GitHub > Local)
+      let importedData = [];
+      const GITHUB_URL = 'https://raw.githubusercontent.com/borispech-png/hpe-aruba-eos/main/public/hpe-enriched-data.json';
+    
       try {
-        const response = await fetch('/hpe-enriched-data.json');
+        // A. Tentative Cloud (Dernière version automatique)
+        console.log("☁️ Vérification des mises à jour...");
+        const response = await fetch(GITHUB_URL);
         if (response.ok) {
-            const jsonData = await response.json();
-            if (jsonData.data && Array.isArray(jsonData.data)) {
-                console.log(`Données enrichies trouvées: ${jsonData.data.length} produits`);
-                
-                // Fusion intelligente : Enrichir l'existant + Ajouter les nouveaux
-                const existingMap = new Map();
-                currentData.forEach(p => existingMap.set((p.productNumber || p.id).toString(), p));
-
-                let mergedCount = 0;
-                let addedCount = 0;
-
-                jsonData.data.forEach(enrichedItem => {
-                    const key = (enrichedItem.productNumber || enrichedItem.name).toString();
-                    // On cherche par ProductNumber ou par Name si correspondant
-                    // Note: Simplification pour la démo
-                    let match = existingMap.get(key);
-                    
-                    if (!match) {
-                        // Essai de recherche floue par description ou autre si besoin
-                        // Pour l'instant, si pas de match et que la DB est quasi vide (Sample), on ajoute
-                        if (currentData.length < 10) {
-                             currentData.push(enrichedItem);
-                             addedCount++;
-                        }
-                    } else {
-                        // On enrichit l'existant
-                        Object.assign(match, { 
-                            ...enrichedItem, 
-                            specs: enrichedItem.specs || match.specs,
-                            // On garde l'ID original pour pas casser IndexedDB
-                            id: match.id 
-                        });
-                        mergedCount++;
-                    }
-                });
-                
-                console.log(`Fusion terminée: ${mergedCount} mis à jour, ${addedCount} ajoutés.`);
-
-                if (jsonData.metadata && jsonData.metadata.lastUpdated) {
-                    setLastUpdated(new Date(jsonData.metadata.lastUpdated));
-                }
+            const json = await response.json();
+            importedData = json.data || [];
+            console.log(`✅ Cloud Sync: ${importedData.length} produits récupérés.`);
+            if (json.metadata && json.metadata.lastUpdated) {
+                console.log(`📅 Date des données Cloud : ${json.metadata.lastUpdated}`);
             }
+        } else {
+            throw new Error("Cloud inaccessible");
         }
-      } catch (e) {
-        console.warn("Pas de fichier enrichi ou erreur fusion:", e);
+      } catch (cloudErr) {
+        // B. Repli Local (Mode hors ligne ou dev)
+        console.warn("⚠️ Mode Hors-Ligne (Repli Local) :", cloudErr);
+        try {
+            const response = await fetch('/hpe-enriched-data.json');
+            if (response.ok) {
+                const json = await response.json();
+                importedData = json.data || [];
+            }
+        } catch (localErr) {
+            console.error("❌ Aucune donnée enrichie disponible.");
+        }
+      }
+
+      // Logique de fusion unifiée
+      if (importedData.length > 0) {
+        try {
+            const jsonData = { data: importedData };
+            console.log(`Données enrichies trouvées: ${jsonData.data.length} produkty`);
+            
+            // Fusion intelligente
+            const existingMap = new Map();
+            currentData.forEach(p => existingMap.set((p.productNumber || p.id).toString(), p));
+
+            let mergedCount = 0;
+            let addedCount = 0;
+
+            jsonData.data.forEach(enrichedItem => {
+                const key = (enrichedItem.productNumber || enrichedItem.name).toString();
+                let match = existingMap.get(key);
+                
+                if (!match) {
+                    if (currentData.length < 10) {
+                         currentData.push(enrichedItem);
+                         addedCount++;
+                    }
+                } else {
+                    Object.assign(match, { 
+                        ...enrichedItem, 
+                        specs: enrichedItem.specs || match.specs,
+                        id: match.id 
+                    });
+                    mergedCount++;
+                }
+            });
+            
+            console.log(`Fusion terminée: ${mergedCount} mis à jour, ${addedCount} ajoutés.`);
+        } catch (e) {
+            console.warn("Erreur pendant la fusion des données:", e);
+        }
       }
 
       // 3. Nettoyage final et assignation des IDs manquants (CRITIQUE pour l'erreur DB)
