@@ -64,7 +64,8 @@ const HPEEOSManager = () => {
       try {
         // A. Tentative Cloud (Dernière version automatique)
         console.log("☁️ Vérification des mises à jour...");
-        const response = await fetch(GITHUB_URL);
+        // Ajout du timestamp pour forcer le rafraîchissement (Anti-Cache)
+        const response = await fetch(`${GITHUB_URL}?t=${new Date().getTime()}`);
         if (response.ok) {
             const json = await response.json();
             importedData = json.data || [];
