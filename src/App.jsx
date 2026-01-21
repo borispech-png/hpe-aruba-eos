@@ -80,13 +80,17 @@ const HPEEOSManager = () => {
         // B. Repli Local (Mode hors ligne ou dev)
         console.warn("⚠️ Mode Hors-Ligne (Repli Local) :", cloudErr);
         try {
-            const response = await fetch('/hpe-enriched-data.json');
+            // Utilisation d'un chemin relatif strict pour GitHub Pages (évite le / racine)
+            const response = await fetch('./hpe-enriched-data.json');
             if (response.ok) {
                 const json = await response.json();
                 importedData = json.data || [];
+                console.log(`🏠 Données Locales récupérées (${importedData.length} produits)`);
+            } else {
+                 throw new Error(`Erreur HTTP ${response.status}`);
             }
         } catch (localErr) {
-            console.error("❌ Aucune donnée enrichie disponible.");
+            console.error("❌ Aucune source de données disponible (ni Cloud, ni Local).", localErr);
         }
       }
 
