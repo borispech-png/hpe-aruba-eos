@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "lastUpdated": "2026-01-20T23:37:34.414Z",
+    "enriched": true,
+    "provider": "Mistral AI"
+  },
+  "data": [
+    {
+      "name": "HP VCX V7205 Platform with DL 360 G6 Server",
+      "announcements": [
+        {
+          "title": "End of sale announcement",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        },
+        {
+          "title": "Product Information",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        }
+      ],
+      "specs": {
+        "series": "VCX V7205",
+        "ports_count": null,
+        "poe_version": null,
+        "uplink_type": "SFP+",
+        "form_factor": "1U"
+      }
+    },
+    {
+      "name": "HP VCX V7205 Platform with DL 360 G6 Server",
+      "announcements": [
+        {
+          "title": "End of sale announcement",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        },
+        {
+          "title": "Product Information",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        }
+      ],
+      "specs": {
+        "series": "VCX V7205",
+        "ports_count": null,
+        "poe_version": null,
+        "uplink_type": null,
+        "form_factor": "1U"
+      }
+    },
+    {
+      "name": "HP VCX V7205 Platform with DL 360 G6 Server",
+      "announcements": [
+        {
+          "title": "End of sale announcement",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        },
+        {
+          "title": "Product Information",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        }
+      ],
+      "specs": {
+        "series": "VCX V7205",
+        "ports_count": null,
+        "poe_version": null,
+        "uplink_type": null,
+        "form_factor": "1U"
+      }
+    },
+    {
+      "name": "HP VCX V7205 Platform with DL 360 G6 Server",
+      "announcements": [
+        {
+          "title": "End of sale announcement",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        },
+        {
+          "title": "Product Information",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        }
+      ],
+      "specs": {
+        "series": "VCX V7205",
+        "ports_count": null,
+        "poe_version": null,
+        "uplink_type": null,
+        "form_factor": "1U"
+      }
+    },
+    {
+      "name": "HP VCX V7205 Platform with DL 360 G6 Server",
+      "announcements": [
+        {
+          "title": "End of sale announcement",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        },
+        {
+          "title": "Product Information",
+          "url": "https://support.hpe.com/docs/products/eos/ES_Announcement_JC715A_VCX_V7205_Platform.pdf"
+        }
+      ],
+      "specs": {
+        "series": "VCX V7205",
+        "ports_count": null,
+        "poe_version": null,
+        "uplink_type": null,
+        "form_factor": "1U"
+      }
+    }
+  ]
+}

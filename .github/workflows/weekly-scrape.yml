@@ -1,0 +1,61 @@
+name: Weekly HPE/Aruba EOS Data Refresh
+
+on:
+  schedule:
+    # Lance le job tous les lundis à 8h00 UTC
+    - cron: "0 8 * * 1"
+  # Permet de lancer manuellement depuis l'interface GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Récupération du code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Installation de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: 📦 Installation des dépendances
+        run: npm ci
+
+      - name: 🕷️ Lancement du Scraper
+        run: |
+          # Lance le script de scraping principal
+          # Assurez-vous que ce script génère bien les fichiers JSON/CSV attendus
+          node scrape-hpe-tables.js 
+
+          # Optionnel : Copier le résultat dans public/ pour qu'il soit accessible par l'app
+          cp src/hpe-eos-detailed.json public/hpe-enriched-data.json || true
+
+      - name: 🔍 Vérification des changements
+        id: check_changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Ajoute les fichiers de données potentiellement modifiés
+          git add src/hpe-eos-detailed.json public/hpe-enriched-data.json hpe-eos-detailed.csv
+
+          # Vérifie s'il y a des différences
+          if git diff --staged --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ Aucune modification détectée. Les données sont à jour."
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Nouvelles données détectées !"
+          fi
+
+      - name: 💾 Commit et Push (si changements)
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git commit -m "data: 🔄 Mise à jour automatique des produits EOS"
+          git push
