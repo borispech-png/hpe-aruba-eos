@@ -25,16 +25,24 @@ jobs:
           cache: "npm"
 
       - name: 📦 Installation des dépendances
-        run: npm ci
+        run: npm install axios cheerio dotenv
+
+      - name: 📂 Vérification des fichiers
+        run: ls -R
 
       - name: 🕷️ Lancement du Scraper
         run: |
-          # Lance le script de scraping principal
-          # Assurez-vous que ce script génère bien les fichiers JSON/CSV attendus
           node scrape-hpe-tables.js 
 
-          # Optionnel : Copier le résultat dans public/ pour qu'il soit accessible par l'app
-          cp src/hpe-eos-detailed.json public/hpe-enriched-data.json || true
+          # Vérifier que le fichier a bien été créé
+          if [ -f "src/hpe-eos-detailed.json" ]; then
+            echo "✅ Fichier JSON généré avec succès"
+            # Copier le résultat dans public/
+            cp src/hpe-eos-detailed.json public/hpe-enriched-data.json
+          else
+            echo "❌ Erreur : Le fichier JSON n'a pas été généré"
+            exit 1
+          fi
 
       - name: 🔍 Vérification des changements
         id: check_changes
