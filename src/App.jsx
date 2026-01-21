@@ -108,10 +108,8 @@ const HPEEOSManager = () => {
                 let match = existingMap.get(key);
                 
                 if (!match) {
-                    if (currentData.length < 10) {
-                         currentData.push(enrichedItem);
-                         addedCount++;
-                    }
+                     currentData.push(enrichedItem);
+                     addedCount++;
                 } else {
                     Object.assign(match, { 
                         ...enrichedItem, 
