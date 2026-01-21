@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # Configuration pour NPM (Node.js)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      # Lundi matin, comme ça vous commencez la semaine avec des updates dispos
+      day: "monday"
+      time: "09:00"
+
+    # Limite le nombre de PR ouvertes en même temps pour ne pas vous spammer
+    open-pull-requests-limit: 5
+
+    # Ajoute un label pour bien identifier ces PRs automatiques
+    labels:
+      - "dependencies"
+      - "automated"
