@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   scrape-and-update:
@@ -68,3 +69,13 @@ jobs:
         run: |
           git commit -m "data: 🔄 Mise à jour automatique des produits EOS"
           git push
+
+      - name: 📢 Notification (Création d'Issue)
+        if: steps.check_changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🚨 Nouveaux produits EOS détectés !" \
+            --body "Le scan hebdomadaire a détecté de nouveaux produits HPE/Aruba EOS. Les données ont été mises à jour dans le fichier JSON. Veuillez vérifier l'application." \
+            --label "automated-update"
